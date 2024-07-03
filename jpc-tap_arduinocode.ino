@@ -8,14 +8,15 @@
 // Define pins for RFID and SPI
 #define SS_PIN D2
 #define RST_PIN D1
+#define LED D3
 
 // Define WiFi credentials
-#define WIFI_SSID "I'm in!"
-#define WIFI_PASSWORD "connected"
+#define WIFI_SSID "wifi"
+#define WIFI_PASSWORD "password"
 
 // Define Firebase credentials
-#define API_KEY "AIzaSyCcvpVGRyAqj5bRAZjD8Z0ge0lOrbzuHTw"
-#define DATABASE_URL "jpctap-dfd46-default-rtdb.firebaseio.com/" 
+#define API_KEY "api key"
+#define DATABASE_URL "database url" 
 
 // Create an instance of the MFRC522 class
 MFRC522 rfid(SS_PIN, RST_PIN);
@@ -35,7 +36,7 @@ void setup() {
   Serial.begin(115200);
   SPI.begin(); // Init SPI bus
   rfid.PCD_Init(); // Init MFRC522
-
+  pinMode(LED, OUTPUT);
   Serial.println();
   Serial.print(F("Reader :"));
   rfid.PCD_DumpVersionToSerial();
@@ -96,6 +97,9 @@ void loop() {
     if (Firebase.RTDB.setString(&fbdo, "Payment/1/rfid", currentRFID)) {
       Serial.println("Data sent successfully.");
       Serial.println("RFID: " + currentRFID);
+      digitalWrite(LED, HIGH);
+      delay(2000);
+      digitalWrite(LED, LOW);
     } else {
       Serial.println("FAILED");
       Serial.println("REASON: " + fbdo.errorReason());
